@@ -1,0 +1,67 @@
+/*MIT License
+
+C++ 3D Game Tutorial Series (https://github.com/PardCode/CPP-3D-Game-Tutorial-Series)
+
+Copyright (c) 2019-2026, PardCode
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
+
+#pragma once
+#include <Engine/Core/Core.h>
+#include <Engine/Core/Base.h>
+#include <Engine/Math/Vec3.h>
+#include <Engine/Math/Vec4.h>
+#include <Engine/Math/Mat4x4.h>
+
+namespace Engine
+{
+	class GraphicsEngine final: public Base
+	{
+	public:
+		explicit GraphicsEngine(const GraphicsEngineDesc& desc);
+		virtual ~GraphicsEngine() override;
+
+
+		GraphicsDevice& getGraphicsDevice() noexcept;
+
+		void render(SwapChain& swapChain, f32 deltaTime);
+	private:
+		struct Vertex
+		{
+			Vec3 position;
+			Vec4 color;
+		};
+		struct alignas(16) ConstantData
+		{
+			Mat4x4 world{};
+			Mat4x4 proj{};
+		};
+
+	private:
+		RefPtr<GraphicsDevice> m_graphicsDevice{};
+		RefPtr<DeviceContext> m_deviceContext{};
+		RefPtr<GraphicsPipelineState> m_pipeline{};
+		RefPtr<VertexBuffer> m_vb{};
+		RefPtr<ConstantBuffer> m_cb{};
+		RefPtr<IndexBuffer> m_ib{};
+
+		f32 m_rot{}, m_scale{}, m_pos{ 0.0f };
+	};
+}
+
